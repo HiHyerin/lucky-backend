@@ -1,7 +1,13 @@
 package io.swyp.luckybackend.users.service;
 
-import org.springframework.stereotype.Service;
+import io.swyp.luckybackend.common.ResponseDTO;
+import io.swyp.luckybackend.users.domain.UserEntity;
+import org.springframework.http.ResponseEntity;
 
-@Service
-public class UserService {
+public interface UserService {
+    UserEntity getUserEntityByUserNo(long userNo);
+    long getUserNo(String token);
+    ResponseEntity<ResponseDTO> getUserInfo(String token);
+    void modifyUserInfo(String token, UserEntity user);
+    long deleteUser(String token);
 }
