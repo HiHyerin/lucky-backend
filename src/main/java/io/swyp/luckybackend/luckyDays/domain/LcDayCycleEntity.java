@@ -17,7 +17,7 @@ import java.util.List;
 public class LcDayCycleEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CYCL_NO", nullable = false)
     private Long cyclNo;
 
@@ -39,18 +39,21 @@ public class LcDayCycleEntity {
     @Temporal(TemporalType.DATE)
     private Date endDt;
 
-    @Column(name = "EXPT_DT", length = 200)
+    @Column(name = "EXPT_DT", columnDefinition = "TEXT")
     private String exptDt;
 
-    @Column(name = "RESET", length = 1, nullable = false, columnDefinition = "CHAR DEFAULT 'N'")
-    private char reset;
+    @Column(name = "RESET", length = 1, columnDefinition = "CHAR DEFAULT 'N'")
+    private String reset = "N";
 
-    @OneToMany(mappedBy = "cycl")
+
+    @Column(name = "ARCHIVE", length = 1, columnDefinition = "CHAR DEFAULT 'N'")
+    private String archive = "N";
+
+    @OneToMany(mappedBy = "cycl", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LcDayDtlEntity> dtls = new ArrayList<>();
 
     @Builder
-    public LcDayCycleEntity(Long cyclNo, UserEntity user, Integer count, Integer period, Date startDt, Date endDt, String exptDt, char reset) {
-        this.cyclNo = cyclNo;
+    public LcDayCycleEntity(UserEntity user, Integer count, Integer period, Date startDt, Date endDt, String exptDt, String reset, String archive) {
         this.user = user;
         this.count = count;
         this.period = period;
@@ -58,5 +61,25 @@ public class LcDayCycleEntity {
         this.endDt = endDt;
         this.exptDt = exptDt;
         this.reset = reset;
+        this.archive = archive;
+    }
+
+    public void changeYArchive(){
+        this.archive = "Y";
+    }
+
+    @Override
+    public String toString() {
+        return "LcDayCycleEntity{" +
+                "cyclNo=" + cyclNo +
+                ", user=" + user.getUserNo() +
+                ", count=" + count +
+                ", period=" + period +
+                ", startDt=" + startDt +
+                ", endDt=" + endDt +
+                ", exptDt='" + exptDt + '\'' +
+                ", reset='" + reset + '\'' +
+                ", dtls=" + dtls +
+                '}';
     }
 }

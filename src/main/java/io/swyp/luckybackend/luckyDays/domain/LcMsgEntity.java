@@ -1,7 +1,6 @@
 package io.swyp.luckybackend.luckyDays.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,15 +11,15 @@ import lombok.NoArgsConstructor;
 public class LcMsgEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MSG_NO", nullable = false)
     private Long msgNo;
 
-    @Column(name = "SJ", length = 50)
+    @Column(name = "SJ", length = 100)
     private String sj;
 
     @Lob
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", columnDefinition = "MEDIUMTEXT")
     private String content;
 
     @Column(name = "VRIABL_WORDS", length = 50)
@@ -32,13 +31,7 @@ public class LcMsgEntity {
     @Column(name = "VRIABL_SYMBOL", length = 50)
     private String variableSymbol;
 
-    @Builder
-    public LcMsgEntity(Long msgNo, String sj, String content, String variableWords, Integer variableCnt, String variableSymbol) {
-        this.msgNo = msgNo;
-        this.sj = sj;
-        this.content = content;
-        this.variableWords = variableWords;
-        this.variableCnt = variableCnt;
-        this.variableSymbol = variableSymbol;
-    }
+    @Column(name = "IMG", length = 200)
+    private String img;
+
 }

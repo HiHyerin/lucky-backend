@@ -17,8 +17,8 @@ public class UserServiceImpl implements UserService {
     private final JwtProvider jwtProvider;
 
     @Override
-    public UserEntity getUserEntityByUserNo(long userNo) {
-        return userRepository.findByUserNo(userNo);
+    public UserEntity getUserEntityByOauthId(String oauthId) {
+        return userRepository.findByOauthId(oauthId);
     }
 
     @Override
@@ -52,7 +52,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public long deleteUser(String token) {
         long userNo = getUserNo(token);
+        String oauthId = userRepository.findOauthIdByUserNo(userNo);
         userRepository.deleteById(userNo);
-        return userNo;
+        return Long.parseLong(oauthId);
+    }
+
+    @Override
+    public boolean isExistUser(String token) {
+        long userNo = getUserNo(token);
+        return userRepository.existsById(userNo);
+    }
+
+    @Override
+    public int getUserIsExp(long userNo) {
+        return userRepository.findIsExpByUserNo(userNo);
     }
 }

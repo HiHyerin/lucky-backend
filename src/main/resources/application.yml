@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: /lucky
 spring:
   application:
     name: lucky-backend
@@ -15,15 +18,15 @@ spring:
             client-id: ${kakao.client-id}
             client-secret: ${kakao.client-secret}
             client-authentication-method: client_secret_post
-            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirect-uri: "{baseUrl}/lucky/oauth2/callback/{registrationId}"
             authorization-grant-type: authorization_code
 #            client-name: kakao
             scope:
               - profile_nickname
               - account_email
-              - birthyear
-              - gender
-              - age_range
+#              - birthyear
+#              - gender
+#              - age_range
 
   datasource:
     driver-class-name: ${db.driver-class-name}
@@ -66,9 +69,8 @@ spring:
 secret-key: ${secret-key}
 kakao-admin-key: ${kakao.admin-key}
 
-redirect-lucky-url: "http://localhost:3000/luckyBoard"
-logout-redirect-uri: "http://localhost:3000"
-expiration-time: "3600"
+
+expiration-time: "86400"
 
 springdoc:
 #  api-docs:
@@ -84,3 +86,19 @@ springdoc:
 #  paths-to-match:
 #    - /**
 #    - /test/**
+
+#---
+#spring:
+#  profiles:
+#    active: prod
+#
+#redirect-lucky-url: "https://luckyday.swygbro.com/oauth2/kakao/callback"
+#logout-redirect-uri: "https://luckyday.swygbro.com"
+#
+#---
+#spring:
+#  profiles:
+#    active: local
+#
+#redirect-lucky-url: "http://localhost:3000/oauth2/kakao/callback"
+#logout-redirect-uri: "http://localhost:3000"

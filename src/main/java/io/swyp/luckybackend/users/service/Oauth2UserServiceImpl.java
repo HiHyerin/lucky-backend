@@ -1,5 +1,4 @@
 package io.swyp.luckybackend.users.service;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swyp.luckybackend.users.domain.CustomOAuth2User;
 import io.swyp.luckybackend.users.domain.UserEntity;
 import io.swyp.luckybackend.users.repository.UserRepository;
@@ -29,13 +28,13 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
         }
 
         UserEntity userEntity = null;
-        long userNo = 0l;
+        String oauthId = "";
         String email = "";
 
         if (oauthClientName.equals("kakao")){
-            userNo = (long) oAuth2User.getAttributes().get("id");
-            boolean isExist = userRepository.existsById(userNo);
-            if (isExist) return new CustomOAuth2User(userNo);
+            oauthId = oAuth2User.getAttributes().get("id").toString();
+            boolean isExist = userRepository.existsByOauthId(oauthId);
+            if (isExist) return new CustomOAuth2User(Long.parseLong(oauthId));
             Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
             email = (String) kakaoAccount.get("email");
             String ageRange = (String) kakaoAccount.get("age_range");
@@ -47,21 +46,23 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
                     .map(g -> g.equals("male") ? 'M' : 'F')
                     .orElse('U'); // 'U'는 Unknown의 의미
 //            System.out.println((Map<String, Object>) kakaoAccount.get("profile").get(""));
-            int profileIconNo = (int) (Math.random() * 168) + 1;
+            int profileIconNo = (int) (Math.random() * 6) + 1;
             String birthYearStr = (String) kakaoAccount.get("birthyear");
             int birthYear = Optional.ofNullable(birthYearStr)
                     .map(Integer::parseInt)
                     .orElse(-1); // 미동의 -1 적재
             Map<String, String> profile = (Map<String, String>) kakaoAccount.get("profile");
             String nickname = profile.get("nickname");
+            System.out.println(oauthId);
             userEntity = UserEntity.builder()
-                    .userNo(userNo)
+                    .oauthId(oauthId)
                     .ageGroup(ageGroup)
                     .birthYear(birthYear)
                     .email(email)
                     .gender(gender)
                     .nickname(nickname)
                     .profileIconNo(profileIconNo)
+                    .isExp(0)
                     .build();
         }
 //
@@ -82,6 +83,6 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
         userRepository.save(userEntity);
 
 
-        return new CustomOAuth2User(userNo);
+        return new CustomOAuth2User(Long.parseLong(oauthId));
     }
 }
